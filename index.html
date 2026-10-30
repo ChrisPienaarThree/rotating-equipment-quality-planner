@@ -613,5 +613,203 @@ window.QualityPlanner = { setStep, generate, planToRow, state, DATA, OVERLAYS, F
 boot();
 </script>
 
+<!-- help:start · in-app user guide and hover tips (0.4 s delay) · source: Claude Outputs/_build/help_inject.html -->
+<style>
+.qtip{position:fixed;z-index:60;max-width:300px;padding:7px 10px;border-radius:6px;background:var(--ink);color:var(--panel);font:13px/1.4 var(--body, system-ui, sans-serif);box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none;opacity:0;transition:opacity .12s}
+.qtip.on{opacity:1}
+#helpPanel{position:fixed;inset:0;z-index:50;background:rgba(10,18,28,.5);display:none;padding:16px}
+#helpPanel.on{display:grid;place-items:center}
+#helpPanel .hbox{background:var(--panel);color:var(--ink);border-radius:10px;width:min(900px,100%);max-height:calc(100vh - 32px);display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 40px rgba(0,0,0,.3);min-width:0}
+#helpPanel .hhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
+#helpPanel .hhead h2{margin:0;font-size:1.15rem}
+#helpPanel .hbody{overflow:auto;padding:4px 18px 18px;line-height:1.5;min-width:0}
+#helpPanel .toc{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+#helpPanel .toc a{font-size:.8rem;padding:3px 8px;border:1px solid var(--line);border-radius:12px;color:var(--accent);text-decoration:none}
+#helpPanel h3{margin:18px 0 6px;font-size:1rem;color:var(--accent-deep)}
+#helpPanel table{border-collapse:collapse;width:100%;font-size:.88rem}
+#helpPanel td,#helpPanel th{border:1px solid var(--line);padding:5px 7px;vertical-align:top;text-align:left}
+#helpPanel .tip{background:var(--accent-soft);border-left:4px solid var(--accent);padding:8px 10px;border-radius:4px;margin:8px 0}
+#helpPanel .twrap{overflow-x:auto}
+#helpPanel kbd{font:12px var(--mono, monospace);border:1px solid var(--line);border-radius:3px;padding:0 4px}
+@media print{#helpPanel,.qtip{display:none!important}}
+</style>
+<div id="helpPanel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="hbox">
+    <div class="hhead"><h2 id="helpTitle">User guide</h2><span><a id="helpPdf" class="mini" href="Rotating Equipment Quality Planner - User Guide.pdf" target="_blank" rel="noopener">Full guide (PDF)</a> <button class="mini" id="helpClose" type="button">Close</button></span></div>
+    <div class="hbody">
+      <nav class="toc" aria-label="Guide contents"><a href="#h-what">What it does</a><a href="#h-start">Start</a><a href="#h-build">Build a plan</a><a href="#h-read">Read the plan</a><a href="#h-freq">Frequencies</a><a href="#h-file">File it</a><a href="#h-reg">Plan register</a><a href="#h-excel">Excel</a><a href="#h-trouble">If something goes wrong</a><a href="#h-gloss">Glossary</a></nav>
+      <p class="tip">Hover over any button, box or tab for a short tip (it appears after 0.4 s). Press <kbd>F1</kbd> or <kbd>?</kbd> to open this guide and <kbd>Esc</kbd> to close it.</p>
+
+      <h3 id="h-what">What the app does</h3>
+      <p>It turns the Rotating Equipment Maintenance and Inspection Requirement Register into a quality plan for one machine: the governing standards, maintenance and inspection requirements, intervals for the criticality class, a frequency schedule, acceptance criteria, hold points, and extra requirements for oxygen, sour, hydrogen, slurry or cryogenic service. Every plan is filed in a register you can edit, sort and keep in Excel.</p>
+      <p class="tip">The register values are typical industry practice and a starting point only. Check intervals and acceptance values against your site specifications and the OEM manuals before you use a plan.</p>
+
+      <h3 id="h-start">Start</h3>
+      <p>The app opens with an example machine loaded. It has three tabs: <b>Build a plan</b>, <b>Plan register</b> and <b>Requirement register (reference)</b>. The pill at the top right shows where plans are saved.</p>
+      <p><b>Excel workbook (Chrome or Edge on a computer):</b> click <b>Connect Excel register…</b>, choose <i>Rotating Equipment Quality Plans.xlsx</i> and allow access. Every plan you file, edit or delete is then saved into the workbook within a second. Next time use <b>Reconnect</b>. Close the workbook in Excel before filing. <b>Create a new register file…</b> starts an empty workbook. Other browsers keep plans in the browser: use Export and Import.</p>
+
+      <h3 id="h-build">Build a plan</h3>
+      <ol>
+        <li><b>Create new site tag number</b> for a machine with no plan yet, e.g. 41-P-301. For a machine already in the register, pick it in <b>Look up existing tags</b>.</li>
+        <li><b>Plant</b>: the site or unit (remembered). <b>Plant area</b>: the process area; <i>Any equipment type</i> lists all 23 machine types.</li>
+        <li><b>Equipment</b>: the machine type. The grey note shows its group and typical examples.</li>
+        <li><b>Site class</b>: A critical, B essential, C general. It starts on the register's default; the note shows the intervals for the class chosen.</li>
+        <li><b>Service overlays</b>: tick every special service the machine sees, or <b>None</b>. This is compulsory. The line underneath says where the proposed default came from; <b>Reset to default</b> restores it.</li>
+        <li><b>Prepared by</b>, <b>Plan status</b> and <b>Site remarks</b> (deviations such as an adopted OEM interval).</li>
+        <li>Click <b>1 · Generate quality plan</b> (or <kbd>Ctrl</kbd>+<kbd>Enter</kbd>). If you change the form afterwards the plan greys out and must be generated again before it can be filed.</li>
+      </ol>
+
+      <h3 id="h-read">Read the plan</h3>
+      <div class="twrap"><table><tr><th>Section</th><th>What it contains</th></tr>
+        <tr><td>Header</td><td>Tag, machine, plant, area, register ID, class, overlays, hold points, discipline, status, date.</td></tr>
+        <tr><td>1 Governing standards</td><td>Each standard with its title, plus those added by overlays.</td></tr>
+        <tr><td>2 Maintenance · 3 Inspection and CM</td><td>The tasks for this machine type.</td></tr>
+        <tr><td>4 Intervals for the site class</td><td>Each interval matched to its task. If the register has none for your class the plan says so and shows the other classes.</td></tr>
+        <tr><td>5 Frequency schedule</td><td>Every task on the standard frequency scale, most frequent first.</td></tr>
+        <tr><td>6 Quality and acceptance criteria</td><td>Vibration, balance grade, clearances, test results.</td></tr>
+        <tr><td>7 Service overlay requirements</td><td>Extra standards, tasks, intervals and criteria for each ticked service.</td></tr>
+        <tr><td>QC depth · Related items · Sign-off</td><td>Criticality-matrix QC depth, cross-cutting register items, and Prepared / Reviewed / Approved lines.</td></tr>
+      </table></div>
+      <p>Hold points: <b>H</b> hold (work stops until released), <b>W</b> witness, <b>R</b> review, <b>S</b> surveillance. <b>TA</b> turnaround, <b>OC</b> on condition. <b>Print / PDF</b> prints only the plan; <b>Copy plan as text</b> copies it for an email or work order.</p>
+
+      <h3 id="h-freq">Frequencies</h3>
+      <p>A machine has many intervals. Each task is placed on a 15-band scale from 1 continuous (online) through daily, weekly, monthly, quarterly, 6-monthly, annual, 2–3 yearly and turnaround to 13 at specified events, 14 on condition and 15 not defined. A range such as "3–6 monthly" goes to its shorter end; EOH is converted at 8 000 h per year. "n/a" for your class becomes <i>Not defined</i>: confirm the interval with the site.</p>
+
+      <h3 id="h-file">File the plan</h3>
+      <p>Click <b>2 · File in register</b>. To change a filed plan, open it, edit, generate and file again: the same row is updated. Each site tag can be filed once; capitals and spaces don't matter. If the tag is taken, a red box offers <b>Open that plan</b>.</p>
+
+      <h3 id="h-reg">Plan register</h3>
+      <ul>
+        <li>Scroll sideways with the strip above the table, the ◀ ▶ buttons or Shift + mouse wheel. Row number, actions and tag stay pinned.</li>
+        <li>Click a column heading to sort; again to reverse. Click a cell to edit it; the change is saved at once.</li>
+        <li><b>Open</b> loads a row into the form · <b>Regenerate</b> rebuilds the derived columns · <b>Duplicate</b> copies with "(copy)" on the tag · <b>Delete</b> after confirming.</li>
+        <li>The filter box shows rows matching a tag, plant, area, machine or frequency band. <b>Compact rows</b> shows long cells as three lines.</li>
+      </ul>
+
+      <h3 id="h-excel">Excel</h3>
+      <p><b>Export to Excel</b> saves Quality plans, Task schedule (one row per task with band and rank), Frequency bands, Tags and Register (source). <b>Export CSV</b> saves the plans only. <b>Import from Excel</b> adds rows from a file in the same layout and skips tags already in the register; tick <b>replace register on import</b> to replace the whole register. Keep the header row of the "Quality plans" sheet as exported. Your own extra sheets are kept.</p>
+
+      <h3 id="h-trouble">If something goes wrong</h3>
+      <div class="twrap"><table><tr><th>What you see</th><th>What to do</th></tr>
+        <tr><td>The amber bar says the app is not connected</td><td>Connect Excel register… (Chrome or Edge), or use Import and Export.</td></tr>
+        <tr><td>"Could not write the register file"</td><td>Close the workbook in Excel or free the write-protected stick. Plans are kept in the browser and written at the next change.</td></tr>
+        <tr><td>"Site tag … is already in the register"</td><td>Open that plan and edit it, or use a different tag.</td></tr>
+        <tr><td>"Choose the service overlays … or tick None"</td><td>Tick the services that apply, or None, then generate again.</td></tr>
+        <tr><td>File in register is greyed out</td><td>Generate first; after any form change, generate again.</td></tr>
+        <tr><td>"No interval defined for Class …"</td><td>Confirm the interval with the site specification and note it in Site remarks.</td></tr>
+        <tr><td>A task shows "Not defined"</td><td>The wording could not be read as a frequency: decide it with the site.</td></tr>
+        <tr><td>Import says columns were not found</td><td>Export a file from the app to see the expected headers.</td></tr>
+        <tr><td>Plans are missing on another computer</td><td>Browser storage does not travel: connect the workbook or import the exported file.</td></tr>
+        <tr><td>Excel export does nothing</td><td>Allow downloads for the page, or use Export CSV.</td></tr>
+      </table></div>
+
+      <h3 id="h-gloss">Glossary</h3>
+      <div class="twrap"><table>
+        <tr><td>Class A / B / C</td><td>A critical (unspared, production-limiting or safety-critical); B essential (spared but severe service); C general (spared utility duty).</td></tr>
+        <tr><td>Default class · site class</td><td>The class the register gives a machine type · the class your site gives the actual machine.</td></tr>
+        <tr><td>Service overlay</td><td>Extra requirements for O2, SOUR, H2, SLURRY or CRYO duty.</td></tr>
+        <tr><td>Register ID (RE-xx)</td><td>The register row a machine type belongs to.</td></tr>
+        <tr><td>ITP · CM · EOH</td><td>Inspection and test plan · condition monitoring · equivalent operating hours.</td></tr>
+      </table></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var DELAY = 400; // ms before a hover tip appears
+  var TIPS = [
+    ['#btnHelp', 'Open the user guide (F1 or ?).'],
+    ['#btnTheme', 'Switch between light and dark colours.'],
+    ['#pillStore', 'Where your plans are being saved right now: the Excel workbook, the shared register or this browser.'],
+    ['#pillCount', 'Number of plans in the register.'],
+    ['#btnFsOpen', 'Pick the Excel register workbook. Chrome or Edge ask once for permission; every change is then saved into it.'],
+    ['#btnFsNew', 'Create an empty register workbook with the right sheets and save plans into it.'],
+    ['#btnFsReconnect', 'Reconnect to the workbook used last time. The browser asks for permission again.'],
+    ['.tab[data-tab="build"]', 'Describe a machine and generate its quality plan.'],
+    ['.tab[data-tab="reg"]', 'Every plan you have filed: edit, sort, open, duplicate, export.'],
+    ['.tab[data-tab="ref"]', 'The source data the plans are built from: register, criticality matrix, frequency bands, overlays and standards.'],
+    ['#fTagSel', 'Pick a tag that already has a plan to open and change it.'],
+    ['#fTag', 'For a machine with no plan yet, type its site tag, e.g. 41-P-301. Each tag can be filed once.'],
+    ['#fPlant', 'The site or unit. Typed once, remembered for next time.'],
+    ['#fArea', 'The process area. "Any equipment type" lists all 23 machine types.'],
+    ['#fEquip', 'The machine type. The grey note shows the machine group and typical examples.'],
+    ['#fClass', 'The class your site gives this machine: A critical, B essential, C general. The intervals change with it.'],
+    ['.overlays label', 'Special services: tick every one this machine sees, or None. Required before generating.'],
+    ['#btnOvDefault', 'Go back to the proposed overlays (from earlier plans, the register and the plant area).'],
+    ['#fBy', 'Your name for the sign-off block.'],
+    ['#fStatus', 'Draft, Reviewed or Approved.'],
+    ['#fRemarks', 'Site deviations, e.g. an adopted OEM interval or a confirmed interval where the register says n/a.'],
+    ['#btnGen', 'Step 1: build the plan from the form (Ctrl+Enter).'],
+    ['#btnSave', 'Step 2: file the plan in the register. Available once the plan matches the form.'],
+    ['#btnNew', 'Empty the form to start a new machine.'],
+    ['#btnPrint', 'Print only the plan, or save it as a PDF from the print dialog.'],
+    ['#btnCopyPlan', 'Copy the plan as plain text for an email or a work order.'],
+    ['#btnExport', 'Save the register as an Excel workbook: plans, task schedule, frequency bands, tags and the source register.'],
+    ['#btnImport', 'Read plans from an Excel or CSV file in the app\'s layout. Tags already in the register are skipped.'],
+    ['#chkReplace', 'Tick before importing to replace the whole register with the file.'],
+    ['#btnCsv', 'Save the plans as a plain CSV table.'],
+    ['#btnClearAll', 'Empty the register after you confirm. Export first if you want a copy.'],
+    ['#search', 'Show only rows matching a tag, plant, area, machine or frequency band.'],
+    ['#btnScrollL', 'Scroll the table left.'],
+    ['#btnScrollR', 'Scroll the table right.'],
+    ['#chkCompact', 'Show long cells as three lines. Untick to show everything.'],
+    ['[data-act="open"]', 'Load this plan into the form to change and re-file it.'],
+    ['[data-act="regen"]', 'Rebuild the derived columns from the register, e.g. after editing class or overlays here.'],
+    ['[data-act="dup"]', 'Copy this row with "(copy)" added to the tag. Rename the tag before use.'],
+    ['[data-act="del"]', 'Delete this plan after you confirm.'],
+    ['#btnOpenDup', 'Open the plan already filed for this tag.']
+  ];
+  var $ = function (s) { return document.querySelector(s); };
+  // Help button next to Theme
+  var theme = $('#btnTheme');
+  if (theme && !$('#btnHelp')) { var b = document.createElement('button'); b.className = 'mini'; b.id = 'btnHelp'; b.type = 'button'; b.textContent = 'Help'; theme.parentNode.insertBefore(b, theme); }
+  var panel = $('#helpPanel'), last = null;
+  if (window.claude) { var pdf = $('#helpPdf'); if (pdf) pdf.hidden = true; } // no PDF next to the online page
+  function openHelp() { last = document.activeElement; panel.classList.add('on'); $('#helpClose').focus(); }
+  function closeHelp() { panel.classList.remove('on'); if (last && last.focus) last.focus(); }
+  $('#btnHelp').addEventListener('click', openHelp);
+  $('#helpClose').addEventListener('click', closeHelp);
+  panel.addEventListener('click', function (e) { if (e.target === panel) closeHelp(); });
+  panel.querySelectorAll('.toc a').forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); var t = panel.querySelector(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }); });
+  document.addEventListener('keydown', function (e) {
+    var typing = /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName) || e.target.isContentEditable;
+    if (e.key === 'F1' || (e.key === '?' && !typing)) { e.preventDefault(); openHelp(); }
+    else if (e.key === 'Escape' && panel.classList.contains('on')) { e.stopPropagation(); closeHelp(); }
+  }, true);
+  // Hover and focus tips
+  document.querySelectorAll('[title]').forEach(function (el) { if (!el.closest('svg')) { el.setAttribute('data-tip', el.getAttribute('title')); el.removeAttribute('title'); } });
+  var tip = document.createElement('div'); tip.className = 'qtip'; tip.id = 'qtip'; tip.setAttribute('role', 'tooltip'); document.body.appendChild(tip);
+  var timer = null, shownFor = null;
+  function tipFor(target) {
+    for (var el = target; el && el.nodeType === 1 && el !== document.body; el = el.parentElement) {
+      if (el.hasAttribute('data-tip')) return [el, el.getAttribute('data-tip')];
+      for (var i = 0; i < TIPS.length; i++) if (el.matches(TIPS[i][0])) return [el, TIPS[i][1]];
+      if (el.tagName === 'LABEL' && el.htmlFor) { var c = document.getElementById(el.htmlFor); if (c) for (var k = 0; k < TIPS.length; k++) if (c.matches(TIPS[k][0])) return [el, TIPS[k][1]]; }
+    }
+    return null;
+  }
+  function place(el) {
+    var r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+    var x = Math.max(8, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 8)), y = r.bottom + 8;
+    if (y + h > innerHeight - 8) y = Math.max(8, r.top - h - 8);
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  }
+  function hide() { clearTimeout(timer); tip.classList.remove('on'); if (shownFor) shownFor.removeAttribute('aria-describedby'); shownFor = null; }
+  function arm(target) {
+    var hit = tipFor(target); if (!hit || hit[0] === shownFor) return;
+    hide();
+    timer = setTimeout(function () { if (panel.classList.contains('on') && !panel.contains(hit[0])) return; tip.textContent = hit[1]; tip.classList.add('on'); place(hit[0]); shownFor = hit[0]; hit[0].setAttribute('aria-describedby', 'qtip'); }, DELAY);
+  }
+  document.addEventListener('pointerover', function (e) { if (e.pointerType === 'touch') return; arm(e.target); });
+  document.addEventListener('pointerout', function (e) { var hit = tipFor(e.target); if (hit && !hit[0].contains(e.relatedTarget)) hide(); });
+  document.addEventListener('focusin', function (e) { arm(e.target); });
+  document.addEventListener('focusout', hide);
+  document.addEventListener('pointerdown', hide, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); }, true);
+  addEventListener('scroll', hide, true); addEventListener('resize', hide);
+})();
+</script>
+<!-- help:end -->
 </body>
 </html>
