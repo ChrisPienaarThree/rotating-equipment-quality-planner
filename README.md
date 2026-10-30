@@ -17,3 +17,11 @@ Reconcile them with the site's engineering specifications, OEM manuals, critical
 before use. Standards are cited without edition numbers; use the edition adopted by the site.
 
 Course material for *Quality Control of Rotating Equipment* (Istec Training).
+
+## Licence
+
+- **Software** (the HTML, CSS and JavaScript of the apps): MIT licence, see [`LICENSE`](LICENSE).
+- **Documents and content** (guides, instructions, worked examples, workbooks, scenario data): Creative Commons Attribution 4.0 (CC BY 4.0), see [`LICENSE-DOCS.md`](LICENSE-DOCS.md). Credit: *"Based on material by Chris Pienaar, licensed under CC BY 4.0."*
+- **Third-party components** keep their own licences: see [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) where present.
+
+Copyright (c) 2026 Chris Pienaar. The models and data are illustrative training material, not design tools, and are provided without warranty.
